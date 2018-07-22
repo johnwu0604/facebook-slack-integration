@@ -163,14 +163,14 @@ function postToSlack(sender_psid, message, sender_info) {
                 'image_url': sender_info.profile_pic,
                 'fields': [
                   {
-                    "title": sender_info.first_name + ' ' + sender_info.last_name,
-                    "value": message,
+                    "title": 'From',
+                    "value": sender_info.first_name + ' ' + sender_info.last_name,
                     "short": false
                   },
                   {
-                      "title": "Sender PSID",
-                      "value": sender_psid,
-                      "short": true
+                    "title": 'Message',
+                    "value": message,
+                    "short": false
                   }
                 ],
                 "actions": [
