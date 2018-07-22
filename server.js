@@ -9,6 +9,9 @@ const app = express().use(body_parser.json())
 
 app.listen(process.env.PORT || 5000, () => console.log('Webhook is listening on port 5000'));
 
+/**
+ * Incoming webhook from facebook page 
+ */
 app.post('/webhook', (req, res) => {  
   let body = req.body;
   if (body.object === 'page') {
@@ -18,7 +21,7 @@ app.post('/webhook', (req, res) => {
       let sender_psid = webhook_event.sender.id
       console.log('Sender ID: ' + sender_psid)
       if (webhook_event.message) {
-        handleMessage(sender_psid, webhook_event.message, req.body)      
+        handleMessage(sender_psid, webhook_event.message)      
       }  
     })
     res.status(200).send('EVENT_RECEIVED')
@@ -58,15 +61,24 @@ app.get('/test-response', (req,res) => {
   res.status(200).send('Response sent')
 });
 
-function handleMessage(sender_psid, received_message, body) {
+function handleMessage(sender_psid, received_message) {
   let response;
-  if (received_message.text) {    
-    response = {
-      "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
-      TEST -> ` + JSON.stringify(body)
-    }
-  } 
-  callSendAPI(sender_psid, response)    
+  if (received_message.text) {
+    request({
+      "uri": "https://graph.facebook.com/" + sender_psid + "?fields=first_name,last_name,profile_pic&access_token=" + PAGE_ACCESS_TOKEN,
+      "method": "GET"
+    }, (err, res, body) => {
+      if (!err) {
+        response = {
+          "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
+          TEST -> ` +  res.body
+        }
+        callSendAPI(sender_psid, response)    
+      } else {
+        console.error("Error occurred retrieving user info:" + err)
+      }
+    }) 
+  }
 }
 
 function callSendAPI(sender_psid, response) {
@@ -88,6 +100,10 @@ function callSendAPI(sender_psid, response) {
       console.error("Unable to send message:" + err)
     }
   }) 
+}
+
+function getSenderName(sender_psid) {
+
 }
 
 /**
