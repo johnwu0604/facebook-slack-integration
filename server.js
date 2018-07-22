@@ -5,7 +5,6 @@ const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
 const request = require('request')
 const express = require('express')
 const body_parser = require('body-parser')
-const serialize = require('node-serialize');
 const app = express().use(body_parser.json())
 
 app.listen(process.env.PORT || 5000, () => console.log('Webhook is listening on port 5000'));
