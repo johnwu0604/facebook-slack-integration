@@ -47,23 +47,42 @@ app.post('/webhook', (req, res) => {
 /**
  * Webhook to trigger the response dialog in slack
  */
-app.post('/trigger-response-dialog', (req, res) => {  
+app.post('/action', (req, res) => {  
   let body = req.body;
-  if (body.object === 'page') {
-    body.entry.forEach(function(entry) {
-      let webhook_event = entry.messaging[0]
-      console.log(webhook_event)
-      let sender_psid = webhook_event.sender.id
-      console.log('Sender ID: ' + sender_psid)
-      if (webhook_event.message) {
-        handleMessage(sender_psid, webhook_event.message)      
-      }  
-    })
-    res.status(200).send('EVENT_RECEIVED')
-  } else {
-    // Return a '404 Not Found' if event is not from a page subscription
-    res.sendStatus(404)
+  var options = {
+    url: SLACK_MESSENGER_WEBHOOK,
+    method: 'POST',
+    headers: {
+        'User-Agent':       'Super Agent/0.0.1',
+        'Content-Type':     'application/json'
+    },
+    json: {
+        'text': 'Testing callback!',
+        'attachments': [
+            {
+                'fields': [
+                  {
+                    "title": 'Testing callback',
+                    "value": JSON.stringify(body),
+                    "short": false
+                  }
+                ]
+            }
+        ]
+    }
   }
+  // Process the request
+  request(options, function (error, response, body) {
+      if (error) {
+          console.log(error)
+          res.send({
+              'success': false
+          })
+      }
+      res.send({
+          'success': true
+      })
+  })
 })
 
 /**
@@ -161,6 +180,7 @@ function postToSlack(sender_psid, message, sender_info) {
         'attachments': [
             {
                 'image_url': sender_info.profile_pic,
+                'callback_id': 'reply_message',
                 'fields': [
                   {
                     "title": 'From',
