@@ -50,25 +50,20 @@ app.post('/webhook', (req, res) => {
 app.post('/action', (req, res) => {  
   let payload = req.body.payload;
   var options = {
-    url: SLACK_MESSENGER_WEBHOOK,
+    url: payload.response_url,
     method: 'POST',
     headers: {
         'User-Agent':       'Super Agent/0.0.1',
         'Content-Type':     'application/json'
     },
     json: {
-        'text': 'Testing callback!',
-        'attachments': [
-            {
-                'fields': [
-                  {
-                    "title": 'Testing callback',
-                    "value": JSON.stringify(payload),
-                    "short": false
-                  }
-                ]
-            }
-        ]
+      "text": "Test Response",
+      "attachments": [
+          {
+              "text": JSON.stringify(payload)
+          }
+      ],
+      "response_type": "in_channel"
     }
   }
   // Process the request
