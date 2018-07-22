@@ -16,7 +16,7 @@ app.post('/webhook', (req, res) => {
       let sender_psid = webhook_event.sender.id
       console.log('Sender ID: ' + sender_psid)
       if (webhook_event.message) {
-        handleMessage(sender_psid, webhook_event.message)      
+        handleMessage(sender_psid, webhook_event.message, webhook_event)      
       }  
     })
     res.status(200).send('EVENT_RECEIVED')
@@ -56,12 +56,12 @@ app.get('/test-response', (req,res) => {
   res.status(200).send('Response sent')
 });
 
-function handleMessage(sender_psid, received_message) {
+function handleMessage(sender_psid, received_message, event) {
   let response;
   if (received_message.text) {    
     response = {
       "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
-      TEST -> Sender_psid is: ` + sender_psid
+      TEST -> ` + JSON.stringify(event)
     }
   } 
   callSendAPI(sender_psid, response)    
