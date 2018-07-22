@@ -48,7 +48,7 @@ app.post('/webhook', (req, res) => {
  * Webhook to trigger the response dialog in slack
  */
 app.post('/action', (req, res) => {  
-  let body = req.body;
+  let payload = req.body.payload;
   var options = {
     url: SLACK_MESSENGER_WEBHOOK,
     method: 'POST',
@@ -63,7 +63,7 @@ app.post('/action', (req, res) => {
                 'fields': [
                   {
                     "title": 'Testing callback',
-                    "value": JSON.stringify(body),
+                    "value": JSON.stringify(payload),
                     "short": false
                   }
                 ]
