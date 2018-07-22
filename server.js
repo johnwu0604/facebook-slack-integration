@@ -114,7 +114,8 @@ function handleMessage(sender_psid, received_message) {
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     response = {
-      "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours.`
+      "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
+      TEST -> Sender_psid is: ` + sender_psid
     }
   } 
   // Send the response message
