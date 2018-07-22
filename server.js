@@ -125,8 +125,9 @@ function postToSlack(sender_psid, message, sender_info) {
         'text': 'New message recieved from McGill AI Society Facebook Page!',
         'attachments': [
             {
-                'title': sender_info.first_name + ' ' + sender_info.last_name + ' (Sender PSID: ' + sender_psid + ')',
+                'title': sender_info.first_name + ' ' + sender_info.last_name,
                 'text': message,
+                'author_name': ' (Sender PSID: ' + sender_psid + ')',
                 'image_url': sender_info.profile_pic
             }
         ]
