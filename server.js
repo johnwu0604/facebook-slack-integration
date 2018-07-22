@@ -48,39 +48,39 @@ app.post('/webhook', (req, res) => {
 /**
  * Webhook to trigger the response dialog in slack
  */
-app.post('/action', (req, res) => {  
-  var obj = serialize.unserialize(req.body);
-  console.log(obj)
-  // var options = {
-  //   url: payload.response_url,
-  //   method: 'POST',
-  //   headers: {
-  //       'User-Agent':       'Super Agent/0.0.1',
-  //       'Content-Type':     'application/json'
-  //   },
-  //   json: {
-  //     "text": "Test Response",
-  //     "attachments": [
-  //         {
-  //             "text": JSON.stringify(payload)
-  //         }
-  //     ],
-  //     "response_type": "in_channel"
-  //   }
-  // }
-  // // Process the request
-  // request(options, function (error, response, body) {
-  //     if (error) {
-  //         console.log(error)
-  //         res.send({
-  //             'success': false
-  //         })
-  //     }
-  //     res.send({
-  //         'success': true
-  //     })
-  // })
-})
+// app.post('/action', (req, res) => {  
+//   var obj = serialize.unserialize(req.body);
+//   console.log(obj)
+//   // var options = {
+//   //   url: payload.response_url,
+//   //   method: 'POST',
+//   //   headers: {
+//   //       'User-Agent':       'Super Agent/0.0.1',
+//   //       'Content-Type':     'application/json'
+//   //   },
+//   //   json: {
+//   //     "text": "Test Response",
+//   //     "attachments": [
+//   //         {
+//   //             "text": JSON.stringify(payload)
+//   //         }
+//   //     ],
+//   //     "response_type": "in_channel"
+//   //   }
+//   // }
+//   // // Process the request
+//   // request(options, function (error, response, body) {
+//   //     if (error) {
+//   //         console.log(error)
+//   //         res.send({
+//   //             'success': false
+//   //         })
+//   //     }
+//   //     res.send({
+//   //         'success': true
+//   //     })
+//   // })
+// })
 
 /**
  * Verification endpoint for facebook
@@ -180,22 +180,19 @@ function postToSlack(sender_psid, message, sender_info) {
                 'callback_id': 'reply_message',
                 'fields': [
                   {
-                    "title": 'From',
-                    "value": sender_info.first_name + ' ' + sender_info.last_name,
-                    "short": false
-                  },
-                  {
                     "title": 'Message',
                     "value": message,
                     "short": false
-                  }
-                ],
-                "actions": [
+                  },
                   {
-                      "name": "respond",
-                      "text": "Reply To Sender",
-                      "type": "button",
-                      "style": "primary"
+                    "title": 'From',
+                    "value": sender_info.first_name + ' ' + sender_info.last_name,
+                    "short": true
+                  },
+                  {
+                    "title": 'Sender PSID',
+                    "value": sender_psid,
+                    "short": true
                   }
                 ]
             }
