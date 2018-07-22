@@ -70,10 +70,10 @@ function handleMessage(sender_psid, received_message) {
     }, (err, res, body) => {
       if (!err) {
         response = {
-          "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
-          TEST -> ` +  res.body
+          "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours.`
         }
         callSendAPI(sender_psid, response)    
+        postToSlack(sender_psid, received_message.text, res.body)
       } else {
         console.error("Error occurred retrieving user info:" + err)
       }
@@ -112,7 +112,7 @@ function getSenderName(sender_psid) {
  * @param sender_psid 
  * @param message 
  */
-function postToSlack(sender_psid, message) {
+function postToSlack(sender_psid, message, sender_info) {
   // Configure the request for sending to slack
   var options = {
     url: SLACK_MESSENGER_WEBHOOK,
@@ -125,8 +125,9 @@ function postToSlack(sender_psid, message) {
         'text': 'New message recieved from McGill AI Society Facebook Page!',
         'attachments': [
             {
-                'title': 'From: ' + sender_psid,
-                'text': message
+                'title': sender_info.first_name + ' ' + sender_info.last_name + ' (Sender PSID: ' + sender_psid + ')',
+                'text': message,
+                'image_url': sender_info.profile_pic
             }
         ]
     }
