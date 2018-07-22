@@ -73,7 +73,7 @@ function handleMessage(sender_psid, received_message) {
           "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours.`
         }
         callSendAPI(sender_psid, response)    
-        postToSlack(sender_psid, received_message.text, res.body)
+        postToSlack(sender_psid, received_message.text, JSON.parse(res.body))
       } else {
         console.error("Error occurred retrieving user info:" + err)
       }
