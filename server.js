@@ -54,7 +54,9 @@ app.post('/messenger-reply', (req, res) => {
   var text = [].concat.apply([], body.text.split('"').map(function(v,i){
     return i%2 ? v : v.split(' ')
   })).filter(Boolean);
-  callSendAPI(text[0], text[1])
+  callSendAPI(text[0], {
+    "text": text[1]
+  })
   res.send(200)
 })
 
