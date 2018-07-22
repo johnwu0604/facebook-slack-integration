@@ -4,8 +4,10 @@ const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
 
 const request = require('request')
 const express = require('express')
-const body_parser = require('body-parser')
-const app = express().use(body_parser.json())
+const bodyParser = require('body-parser')
+const app = express()
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.listen(process.env.PORT || 5000, () => console.log('Webhook is listening on port 5000'));
 
@@ -47,39 +49,14 @@ app.post('/webhook', (req, res) => {
 /**
  * Webhook to trigger the response dialog in slack
  */
-// app.post('/action', (req, res) => {  
-//   var obj = serialize.unserialize(req.body);
-//   console.log(obj)
-//   // var options = {
-//   //   url: payload.response_url,
-//   //   method: 'POST',
-//   //   headers: {
-//   //       'User-Agent':       'Super Agent/0.0.1',
-//   //       'Content-Type':     'application/json'
-//   //   },
-//   //   json: {
-//   //     "text": "Test Response",
-//   //     "attachments": [
-//   //         {
-//   //             "text": JSON.stringify(payload)
-//   //         }
-//   //     ],
-//   //     "response_type": "in_channel"
-//   //   }
-//   // }
-//   // // Process the request
-//   // request(options, function (error, response, body) {
-//   //     if (error) {
-//   //         console.log(error)
-//   //         res.send({
-//   //             'success': false
-//   //         })
-//   //     }
-//   //     res.send({
-//   //         'success': true
-//   //     })
-//   // })
-// })
+app.post('/messenger-reply', (req, res) => {  
+  var body = req.body
+  var text = [].concat.apply([], body.text.split('"').map(function(v,i){
+    return i%2 ? v : v.split(' ')
+  })).filter(Boolean);
+  callSendAPI(text[0], text[1])
+  res.send(200)
+})
 
 /**
  * Verification endpoint for facebook
