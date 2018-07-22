@@ -9,8 +9,9 @@
     "author": "John Wu",
     "dependencies": {
         "body-parser": "^1.15.0",
+        "dotenv": "^4.0.0",
         "express": "^4.13.4",
-        "request": "^2.72.0",
-        "dotenv": "^4.0.0"
+        "node-serialize": "0.0.4",
+        "request": "^2.72.0"
     }
 }

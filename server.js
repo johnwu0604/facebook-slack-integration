@@ -5,6 +5,7 @@ const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
 const request = require('request')
 const express = require('express')
 const body_parser = require('body-parser')
+const serialize = require('node-serialize');
 const app = express().use(body_parser.json())
 
 app.listen(process.env.PORT || 5000, () => console.log('Webhook is listening on port 5000'));
@@ -48,36 +49,37 @@ app.post('/webhook', (req, res) => {
  * Webhook to trigger the response dialog in slack
  */
 app.post('/action', (req, res) => {  
-  let payload = req.body.payload;
-  var options = {
-    url: payload.response_url,
-    method: 'POST',
-    headers: {
-        'User-Agent':       'Super Agent/0.0.1',
-        'Content-Type':     'application/json'
-    },
-    json: {
-      "text": "Test Response",
-      "attachments": [
-          {
-              "text": JSON.stringify(payload)
-          }
-      ],
-      "response_type": "in_channel"
-    }
-  }
-  // Process the request
-  request(options, function (error, response, body) {
-      if (error) {
-          console.log(error)
-          res.send({
-              'success': false
-          })
-      }
-      res.send({
-          'success': true
-      })
-  })
+  var obj = serialize.unserialize(req.body);
+  console.log(obj)
+  // var options = {
+  //   url: payload.response_url,
+  //   method: 'POST',
+  //   headers: {
+  //       'User-Agent':       'Super Agent/0.0.1',
+  //       'Content-Type':     'application/json'
+  //   },
+  //   json: {
+  //     "text": "Test Response",
+  //     "attachments": [
+  //         {
+  //             "text": JSON.stringify(payload)
+  //         }
+  //     ],
+  //     "response_type": "in_channel"
+  //   }
+  // }
+  // // Process the request
+  // request(options, function (error, response, body) {
+  //     if (error) {
+  //         console.log(error)
+  //         res.send({
+  //             'success': false
+  //         })
+  //     }
+  //     res.send({
+  //         'success': true
+  //     })
+  // })
 })
 
 /**
