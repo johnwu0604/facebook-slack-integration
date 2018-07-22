@@ -1,0 +1,19 @@
+{
+    "name": "mcgill-ai-messenger-plugin",
+    "version": "1.0.0",
+    "description": "A plugin for slack to allow execs to answer messages from slack.",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "John Wu",
+    "dependencies": {
+        "body-parser": "^1.15.0",
+        "express": "^4.13.4",
+        "request": "^2.72.0",
+        "dotenv": "^4.0.0"
+    },
+    "engines": {
+        "node": "~4.1.2"
+    }
+}
