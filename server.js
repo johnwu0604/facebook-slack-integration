@@ -1,5 +1,7 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
+
 const request = require('request')
 const express = require('express')
 const body_parser = require('body-parser')
@@ -16,7 +18,7 @@ app.post('/webhook', (req, res) => {
       let sender_psid = webhook_event.sender.id
       console.log('Sender ID: ' + sender_psid)
       if (webhook_event.message) {
-        handleMessage(sender_psid, webhook_event.message, webhook_event)      
+        handleMessage(sender_psid, webhook_event.message, req.body)      
       }  
     })
     res.status(200).send('EVENT_RECEIVED')
@@ -56,12 +58,12 @@ app.get('/test-response', (req,res) => {
   res.status(200).send('Response sent')
 });
 
-function handleMessage(sender_psid, received_message, event) {
+function handleMessage(sender_psid, received_message, body) {
   let response;
   if (received_message.text) {    
     response = {
       "text": `Hi! Thank you for sending us a message. We will respond to you within 24 hours. 
-      TEST -> ` + JSON.stringify(event)
+      TEST -> ` + JSON.stringify(body)
     }
   } 
   callSendAPI(sender_psid, response)    
@@ -86,4 +88,43 @@ function callSendAPI(sender_psid, response) {
       console.error("Unable to send message:" + err)
     }
   }) 
+}
+
+/**
+ * Posts the message to the slack channel
+ * 
+ * @param sender_psid 
+ * @param message 
+ */
+function postToSlack(sender_psid, message) {
+  // Configure the request for sending to slack
+  var options = {
+    url: SLACK_MESSENGER_WEBHOOK,
+    method: 'POST',
+    headers: {
+        'User-Agent':       'Super Agent/0.0.1',
+        'Content-Type':     'application/json'
+    },
+    json: {
+        'text': 'New message recieved from McGill AI Society Facebook Page!',
+        'attachments': [
+            {
+                'title': 'From: ' + sender_psid,
+                'text': message
+            }
+        ]
+    }
+  }
+  // Process the request
+  request(options, function (error, response, body) {
+      if (error) {
+          console.log(error)
+          res.send({
+              'success': false
+          })
+      }
+      res.send({
+          'success': true
+      })
+  })
 }
