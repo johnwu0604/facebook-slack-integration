@@ -118,8 +118,7 @@ function handleMessage(sender_psid, received_message) {
       if (!err) {
         // send automated greeting back to user immediately
         callSendAPI(sender_psid, {
-          "text": `Hi! Thank you for sending us a message. Our neural networks are trying their best to effectively answer your questions. \
-          They’re currently training, but you should have a response within 24 hours.`
+          "text": `Hi! Thank you for sending us a message. Our neural networks are trying their best to effectively answer your questions. They’re currently training, but you should have a response within 24 hours.`
         })    
         // post the message to slack channel
         postToSlack(sender_psid, received_message.text, JSON.parse(res.body))
