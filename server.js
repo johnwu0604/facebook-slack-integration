@@ -229,13 +229,8 @@ function postResponseSlackNotification(responder, recipient, message) {
   request(options, function (error, response, body) {
       if (error) {
           console.log(error)
-          res.send({
-              'success': false
-          })
       }
-      res.send({
-          'success': true
-      })
+      console.log("Sent successfully")
   })
 }
 
