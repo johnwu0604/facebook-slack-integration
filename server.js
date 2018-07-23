@@ -57,7 +57,7 @@ app.post('/messenger-reply', (req, res) => {
   callSendAPI(text[0], {
     "text": text[1]
   })
-  res.send(200)
+  res.sendStatus(200)
 })
 
 /**
