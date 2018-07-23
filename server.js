@@ -47,76 +47,6 @@ app.post('/webhook', (req, res) => {
 })
 
 /**
- * TODO: Webhook to trigger the response dialog in slack 
- */
-app.post('/action', (req, res) => {  
-  var payload = req.body.payload
-  console.log(payload)
-  var options = {
-    url: payload.response_url,
-    method: 'POST',
-    headers: {
-        'User-Agent':       'Super Agent/0.0.1',
-        'Content-Type':     'application/json'
-    },
-    json: {
-      "trigger_id": payload.trigger_id,
-      "dialog": {
-        "callback_id": "ryde-46e2b0",
-        "title": "Reply To Message",
-        "submit_label": "Reply",
-        "notify_on_cancel": true,
-        "elements": [
-            {
-                "type": "textarea",
-                "label": "Message",
-                "name": "message"
-            }
-        ]
-      }
-    }
-  }
-  // Process the request
-  request(options, function (error, response, body) {
-    if (error) {
-        console.log(error)
-        res.send({
-            'success': false
-        })
-    }
-    res.send({
-        'success': true
-    })
-  })
-})
-
-/**
- * Webhook to trigger the response dialog in slack
- */
-// app.post('/messenger-reply', (req, res) => {  
-//   var payload = req.body
-//   var text = [].concat.apply([], payload.text.split('"').map(function(v,i){
-//     return i%2 ? v : v.split(' ')
-//   })).filter(Boolean);
-//   // retrieve user information 
-//   request({
-//     "uri": "https://graph.facebook.com/" + text[0] + "?fields=first_name,last_name,profile_pic&access_token=" + PAGE_ACCESS_TOKEN,
-//     "method": "GET"
-//   }, (err, res, body) => {
-//     if (!err) {
-//       // send automated greeting back to user immediately
-//       callSendAPI(text[0], {
-//         "text": text[1]
-//       })
-//       postResponseSlackNotification('@' + payload.user_name, res.body.first_name + ' ' + res.body.last_name, text[1])
-//     } else {
-//       console.error("Error occurred retrieving user info:" + err)
-//     }
-//   }) 
-//   res.sendStatus(200)
-// })
-
-/**
  * Webhook to trigger the response dialog in slack
  */
 app.post('/messenger-reply', (req, res) => {  
@@ -205,49 +135,6 @@ function callSendAPI(sender_psid, response) {
   }) 
 }
 
-function postResponseSlackNotification(responder, recipient, message) {
-  // Configure the request for sending to slack
-  var options = {
-    url: SLACK_MESSENGER_WEBHOOK,
-    method: 'POST',
-    headers: {
-        'User-Agent':       'Super Agent/0.0.1',
-        'Content-Type':     'application/json'
-    },
-    json: {
-        'text': 'Response sent to facebook messegner conversation.',
-        'attachments': [
-            {
-                'fields': [
-                  {
-                    "title": 'Responder',
-                    "value": responder,
-                    "short": true
-                  },
-                  {
-                    "title": 'Recipient',
-                    "value": recipient,
-                    "short": true
-                  },
-                  {
-                    "title": 'Message',
-                    "value": message,
-                    "short": false
-                  }
-                ]
-            }
-        ]
-    }
-  }
-  // Process the request
-  request(options, function (error, response, body) {
-      if (error) {
-          console.log(error)
-      }
-      console.log("Sent successfully")
-  })
-}
-
 /**
  * Posts the message to the slack channel
  * 
@@ -264,7 +151,7 @@ function postToSlack(sender_psid, message, sender_info) {
         'Content-Type':     'application/json'
     },
     json: {
-        'text': 'New message recieved from McGill AI Society Facebook Page. To respond to message, type: /messenger-reply "<SENDER PSID>" "<MESSAGE>"',
+        'text': 'New message recieved from McGill AI Society Facebook Page!',
         'attachments': [
             {
                 'image_url': sender_info.profile_pic,
