@@ -108,6 +108,13 @@ function handleMessage(sender_psid, received_message) {
   }
 }
 
+app.get('/test-send', (req, res) => {
+  callSendAPI('1824707100927777', {
+    "text": `Hello test`
+  })  
+  res.send(200)
+})
+
 /**
  * Calls API to send message back to specified user
  * 
