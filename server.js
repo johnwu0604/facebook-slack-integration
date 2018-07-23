@@ -93,26 +93,40 @@ app.post('/action', (req, res) => {
 /**
  * Webhook to trigger the response dialog in slack
  */
+// app.post('/messenger-reply', (req, res) => {  
+//   var payload = req.body
+//   var text = [].concat.apply([], payload.text.split('"').map(function(v,i){
+//     return i%2 ? v : v.split(' ')
+//   })).filter(Boolean);
+//   // retrieve user information 
+//   request({
+//     "uri": "https://graph.facebook.com/" + text[0] + "?fields=first_name,last_name,profile_pic&access_token=" + PAGE_ACCESS_TOKEN,
+//     "method": "GET"
+//   }, (err, res, body) => {
+//     if (!err) {
+//       // send automated greeting back to user immediately
+//       callSendAPI(text[0], {
+//         "text": text[1]
+//       })
+//       postResponseSlackNotification('@' + payload.user_name, res.body.first_name + ' ' + res.body.last_name, text[1])
+//     } else {
+//       console.error("Error occurred retrieving user info:" + err)
+//     }
+//   }) 
+//   res.sendStatus(200)
+// })
+
+/**
+ * Webhook to trigger the response dialog in slack
+ */
 app.post('/messenger-reply', (req, res) => {  
-  var payload = req.body
-  var text = [].concat.apply([], payload.text.split('"').map(function(v,i){
+  var body = req.body
+  var text = [].concat.apply([], body.text.split('"').map(function(v,i){
     return i%2 ? v : v.split(' ')
   })).filter(Boolean);
-  // retrieve user information 
-  request({
-    "uri": "https://graph.facebook.com/" + text[0] + "?fields=first_name,last_name,profile_pic&access_token=" + PAGE_ACCESS_TOKEN,
-    "method": "GET"
-  }, (err, res, body) => {
-    if (!err) {
-      // send automated greeting back to user immediately
-      callSendAPI(text[0], {
-        "text": text[1]
-      })
-      postResponseSlackNotification('@' + payload.user_name, res.body.first_name + ' ' + res.body.last_name, text[1])
-    } else {
-      console.error("Error occurred retrieving user info:" + err)
-    }
-  }) 
+  callSendAPI(text[0], {
+    "text": text[1]
+  })
   res.sendStatus(200)
 })
 
