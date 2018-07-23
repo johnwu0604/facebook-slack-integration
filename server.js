@@ -49,6 +49,15 @@ app.post('/webhook', (req, res) => {
 /**
  * Webhook to trigger the response dialog in slack
  */
+app.post('/action', (req, res) => {  
+  var body = req.body
+  console.log(body)
+  res.sendStatus(200)
+})
+
+/**
+ * Webhook to trigger the response dialog in slack
+ */
 app.post('/messenger-reply', (req, res) => {  
   var body = req.body
   var text = [].concat.apply([], body.text.split('"').map(function(v,i){
@@ -177,8 +186,10 @@ function postToSlack(sender_psid, message, sender_info) {
                 ],
                 "actions": [
                   {
-                    "type": "button",
-                    "text": "Reply To Sender"
+                      "name": "respond",
+                      "text": "Reply To Sender",
+                      "type": "button",
+                      "style": "primary"
                   }
                 ]
             }
