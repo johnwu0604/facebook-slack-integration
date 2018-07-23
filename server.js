@@ -88,6 +88,7 @@ app.get('/webhook', (req, res) => {
  */
 function handleMessage(sender_psid, received_message) {
   let response;
+  console.log(received_message)
   if (received_message.text) {
     // retrieve user information 
     request({
@@ -188,12 +189,6 @@ function postToSlack(sender_psid, message, sender_info) {
   request(options, function (error, response, body) {
       if (error) {
           console.log(error)
-          res.send({
-              'success': false
-          })
       }
-      res.send({
-          'success': true
-      })
   })
 }
