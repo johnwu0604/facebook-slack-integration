@@ -47,12 +47,47 @@ app.post('/webhook', (req, res) => {
 })
 
 /**
- * Webhook to trigger the response dialog in slack
+ * TODO: Webhook to trigger the response dialog in slack 
  */
 app.post('/action', (req, res) => {  
-  var body = req.body
-  console.log(body)
-  res.sendStatus(200)
+  var payload = req.body.payload
+  console.log(payload)
+  var options = {
+    url: payload.response_url,
+    method: 'POST',
+    headers: {
+        'User-Agent':       'Super Agent/0.0.1',
+        'Content-Type':     'application/json'
+    },
+    json: {
+      "trigger_id": payload.trigger_id,
+      "dialog": {
+        "callback_id": "ryde-46e2b0",
+        "title": "Reply To Message",
+        "submit_label": "Reply",
+        "notify_on_cancel": true,
+        "elements": [
+            {
+                "type": "textarea",
+                "label": "Message",
+                "name": "message"
+            }
+        ]
+      }
+    }
+  }
+  // Process the request
+  request(options, function (error, response, body) {
+    if (error) {
+        console.log(error)
+        res.send({
+            'success': false
+        })
+    }
+    res.send({
+        'success': true
+    })
+  })
 })
 
 /**
@@ -162,7 +197,7 @@ function postToSlack(sender_psid, message, sender_info) {
         'Content-Type':     'application/json'
     },
     json: {
-        'text': 'New message recieved from McGill AI Society Facebook Page!',
+        'text': 'New message recieved from McGill AI Society Facebook Page. To respond to message, type: /messenger-reply "<SENDER PSID>" "<MESSAGE>"',
         'attachments': [
             {
                 'image_url': sender_info.profile_pic,
@@ -182,14 +217,6 @@ function postToSlack(sender_psid, message, sender_info) {
                     "title": 'Sender PSID',
                     "value": sender_psid,
                     "short": true
-                  }
-                ],
-                "actions": [
-                  {
-                      "name": "respond",
-                      "text": "Reply To Sender",
-                      "type": "button",
-                      "style": "primary"
                   }
                 ]
             }
