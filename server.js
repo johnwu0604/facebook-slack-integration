@@ -50,8 +50,8 @@ app.post('/webhook', (req, res) => {
  * Webhook to trigger the response dialog in slack
  */
 app.post('/messenger-reply', (req, res) => {  
-  var body = req.body
-  var text = [].concat.apply([], body.text.split('"').map(function(v,i){
+  var payload = req.body
+  var text = [].concat.apply([], payload.text.split('"').map(function(v,i){
     return i%2 ? v : v.split(' ')
   })).filter(Boolean);
   // retrieve user information 
@@ -153,11 +153,6 @@ function callSendAPI(sender_psid, response) {
     }
   }) 
 }
-
-app.get('/t', (req, res) => {
-  postResponseSlackNotification("@johnwu", "John Wu", "Hello there");
-  res.send(200)
-})
 
 
 /**
