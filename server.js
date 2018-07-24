@@ -63,12 +63,13 @@ app.post('/messenger-reply', (req, res) => {
       callSendAPI(text[0], {
         "text": text[1]
       })
-      postResponseSlackNotification('@' + payload.user_name, res.body.first_name + ' ' + res.body.last_name, text[1])
+      var user_info = JSON.parse(res.body)
+      postResponseSlackNotification('@' + payload.user_name, user_info.first_name + ' ' + user_info.last_name, text[1])
     } else {
       console.error("Error occurred retrieving user info:" + err)
     }
   }) 
-  res.sendStatus(200)
+  res.status(200).send("Message sent!")
 })
 
 /**
