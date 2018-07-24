@@ -1,6 +1,7 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const AUTO_REPLY_MESSAGE = 'Hi! Thank you for sending us a message. Our neural networks are trying their best to effectively answer your questions. They’re currently training, but you should have a response within 24 hours.'
 const FACEBOOK_PAGE_NAME = 'McGill AI Society'
 
@@ -44,7 +45,6 @@ app.post('/webhook', (req, res) => {
  * Verification endpoint for facebook
  */
 app.get('/webhook', (req, res) => {
-  const VERIFY_TOKEN = "implementai"
   let mode = req.query['hub.mode']
   let token = req.query['hub.verify_token']
   let challenge = req.query['hub.challenge']
