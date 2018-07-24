@@ -172,7 +172,7 @@ function handleFacebookMessage(sender_psid, received_message) {
  * @param response 
  */
 function sendFacebookMessage(psid, response) {
-  let request = {
+  let request_body = {
     'recipient': {
       'id': psid
     },
@@ -182,7 +182,7 @@ function sendFacebookMessage(psid, response) {
     'uri': 'https://graph.facebook.com/v2.6/me/messages',
     'qs': { 'access_token': PAGE_ACCESS_TOKEN },
     'method': 'POST',
-    'json': request
+    'json': request_body
   }, (err, res, body) => {
     if (!err) {
       console.log('Message sent to facebook with user PSID: ' + psid)
