@@ -104,12 +104,11 @@ app.post('/messenger-reply', (req, res) => {
             }
         ]
       })
-      res.status(200).send('Message sent!')
     } else {
       console.error('Error occurred retrieving user info: ' + err)
-      res.status(500).send('An error occurred while sending message.')
     }
-  }) 
+  })
+  res.status(200).send('Message sent!') 
 })
 
 /**
