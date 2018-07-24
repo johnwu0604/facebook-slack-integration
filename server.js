@@ -154,6 +154,12 @@ function callSendAPI(sender_psid, response) {
   }) 
 }
 
+app.get('/t', (req, res) => {
+  postResponseSlackNotification("@johnwu", "John Wu", "Hello there");
+  res.send(200)
+})
+
+
 /**
  * Post to slack when exec responds to a message
  * 
