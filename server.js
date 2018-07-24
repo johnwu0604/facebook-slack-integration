@@ -176,7 +176,7 @@ function sendFacebookMessage(psid, response) {
     'recipient': {
       'id': psid
     },
-    'message"': response
+    'message': response
   }
   request({
     'uri': 'https://graph.facebook.com/v2.6/me/messages',
