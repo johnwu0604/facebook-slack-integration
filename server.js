@@ -54,9 +54,20 @@ app.post('/messenger-reply', (req, res) => {
   var text = [].concat.apply([], body.text.split('"').map(function(v,i){
     return i%2 ? v : v.split(' ')
   })).filter(Boolean);
-  callSendAPI(text[0], {
-    "text": text[1]
-  })
+  // retrieve user information 
+  request({
+    "uri": "https://graph.facebook.com/" + text[0] + "?fields=first_name,last_name,profile_pic&access_token=" + PAGE_ACCESS_TOKEN,
+    "method": "GET"
+  }, (err, res, body) => {
+    if (!err) {
+      callSendAPI(text[0], {
+        "text": text[1]
+      })
+      postResponseSlackNotification('@' + payload.user_name, res.body.first_name + ' ' + res.body.last_name, text[1])
+    } else {
+      console.error("Error occurred retrieving user info:" + err)
+    }
+  }) 
   res.sendStatus(200)
 })
 
@@ -142,6 +153,57 @@ function callSendAPI(sender_psid, response) {
     }
   }) 
 }
+
+/**
+ * Post to slack when exec responds to a message
+ * 
+ * @param responder 
+ * @param recipient 
+ * @param message 
+ */
+function postResponseSlackNotification(responder, recipient, message) {
+  // Configure the request for sending to slack
+  var options = {
+    url: SLACK_MESSENGER_WEBHOOK,
+    method: 'POST',
+    headers: {
+        'User-Agent':       'Super Agent/0.0.1',
+        'Content-Type':     'application/json'
+    },
+    json: {
+        'text': 'Response sent to facebook messenger conversation.',
+        'attachments': [
+            {
+                'fields': [
+                  {
+                    "title": 'Responder',
+                    "value": responder,
+                    "short": true
+                  },
+                  {
+                    "title": 'Recipient',
+                    "value": recipient,
+                    "short": true
+                  },
+                  {
+                    "title": 'Message',
+                    "value": message,
+                    "short": false
+                  }
+                ]
+            }
+        ]
+    }
+  }
+  // Process the request
+  request(options, function (error, response, body) {
+      if (error) {
+          console.log(error)
+      }
+      console.log("Sent successfully")
+  })
+}
+
 
 /**
  * Posts the message to the slack channel
