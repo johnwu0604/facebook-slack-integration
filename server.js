@@ -128,7 +128,7 @@ function handleFacebookMessage(sender_psid, received_message) {
         console.log(received_message)
         // send automated greeting back to user immediately
         sendFacebookMessage(sender_psid, {
-          'text': AUTO_REPLY_MESSAGE + ' TEST -> ' + received_message
+          'text': AUTO_REPLY_MESSAGE + ' TEST -> ' + JSON.parse(res.body) + ' ' + JSON.parse(received_message)
         })    
         // post message to slack
         var sender_info = JSON.parse(res.body)
