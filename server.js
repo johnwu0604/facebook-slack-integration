@@ -2,7 +2,6 @@
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const SLACK_MESSENGER_WEBHOOK = process.env.SLACK_MESSENGER_WEBHOOK;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
-const AUTO_REPLY_MESSAGE = 'Hi! Thank you for sending us a message. Our neural networks are trying their best to effectively answer your questions. They’re currently training, but you should have a response within 24 hours.'
 const FACEBOOK_PAGE_NAME = 'McGill AI Society'
 
 const request = require('request')
@@ -125,11 +124,7 @@ function handleFacebookMessage(sender_psid, received_message) {
       'method': 'GET'
     }, (err, res, body) => {
       if (!err) {
-        console.log(received_message)
-        // send automated greeting back to user immediately
-        sendFacebookMessage(sender_psid, {
-          'text': AUTO_REPLY_MESSAGE + ' TEST -> ' + JSON.parse(res.body) + ' ' + received_message.mid
-        })    
+        console.log(received_message)   
         // post message to slack
         var sender_info = JSON.parse(res.body)
         postToSlack({
